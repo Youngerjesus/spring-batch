@@ -1,1 +1,10 @@
-
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/spring_batch
+      username: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      password: 1234
+  batch:
+    jdbc:
+      initialize-schema: always
