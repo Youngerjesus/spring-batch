@@ -81,3 +81,55 @@ public class HelloJobConfiguration {
     - NEVER
       - 스크립트를 항상 실행 안한다. 
       - 운영환경일 경우에는 수동으로 스크립트 생성 후 실행하는 걸 권장한다. 
+
+## DB 스키마 생성
+
+### Job 관련 테이블 
+
+- `BATCH_JOB_INSTANCE`
+  - Job 이 실행될 때 JobInstance 정보가 저장되고 job_name 과 job_key 를 키로하여 데이터를 생성한다.
+  - 동일한 job_name 과 job_key 로 중복 저장될 순 없다. (둘이 합쳐서 unique_key 로 지정)
+  - 칼럼을 살펴보면 다음과 같다.
+    - job_instance_id: 기본키 
+    - version: 업데이트 될 때마다 1씩 증가 
+    - job_name: job 을 구성하는 job 의 이름
+    - job_key: jobParameter 와 job_name 을 합쳐서 해싱한 값이다
+- `BATCH_JOB_EXECUTION`
+  - job 의 실행정보가 저장되고 job 생성, 시작, 종료 시간, 실행 상태, 메시지 등을 관리한다.
+  - 주요 칼럼을 보면 다음과 같다. 
+    - job_execution_id: job_execution 을 식별하는 고유키
+    - version: 업데이트 될 때마다 1씩 증가 
+    - job_instance_id: job_instance 의 값이 저장
+    - create_time: 실행이 생성된 시간 
+    - start_time: 실행이 시작된 시간 
+    - end_time: 실행이 종료된 시간. 오류로 인해서 중단되는 경우에는 값이 없을 수 있다.
+    - status: 실행의 상태 (COMPLETED, FAILED, STOPPED)
+    - exit_code: 실행 종료 코드 (COMPLETED, FAILED)
+    - exit_message: status 가 실패일 경우 원인이 여기에 들어감
+    - last_updated: 마지막 실행 시점을 timestamp 형식으로 기록 
+- `BATCH_JOB_EXECUTION_PARAMS`
+  - job 과 함께 실행되는 JobParameter 정보를 저장한다.
+  - 주요 칼럼을 보면 다음과 같다.
+    - job_execution_id: jobExecution 의 식별키. JobExecution 과 일대다 관 
+    - TYPE_CD: STRING, LONG, DATE, DOUBLE 4 가지 타입 정보 
+    - KEY_NAME: 파라미터 키 값 
+    - DATE_VAL: 파라미터 날짜 값 
+    - STRING_VAL: 파라미터 문자열 값
+    - DOUBLE_VAL: 파라미터 DOUBLE 값
+    - LONG_VAL: 파라미터 LONG 값 
+    - IDENTIFYING: 식별 여부 (true or false)
+- `BATCH_JOB_EXECUTION_CONTEXT`
+  - job 의 실행동안 여러가지 상태 정보들, 공유 데이터를 json 화 해서 저장한다. 
+  - Step 간에 공유도 가능하다. 
+  - 주요 칼럼은 다음과 같다. 
+    - JOB_EXECUTION_ID: jobExecution 의 식별키 job_execution 마다 생성한다. 
+    - SHORT_CONTEXT: JOB 의 실행 상태 정보, 공유 데이터 등의 정보를 문자열로 저장 
+    - SERIALIZED_CONTEXT: 직렬화 된 컨택스트 정보  
+
+### Step 과 관련된 정보들 
+
+- `BATCH_STEP_EXECUTION`
+  - Step 의 실행 정보가 저장되고 생성, 시작, 종료, 실행상태, 메시지 등을 관리한다.
+- `BATCH_STEP_EXECUTION_CONTEXT`
+  - Step 의 실행동안 여러가지 상태정보, 공유 데이터를 직렬화해서 저장한다. 
+  - Step 별로 저장되며 Step 간 공유하는게 안됨
