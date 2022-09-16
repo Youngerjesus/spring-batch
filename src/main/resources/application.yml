@@ -6,5 +6,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       password: 1234
   batch:
+    job:
+      enabled: false
     jdbc:
       initialize-schema: always
