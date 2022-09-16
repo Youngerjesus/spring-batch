@@ -11,3 +11,5 @@
 - [Job](documents/job.md)
 
 - [Job Instance](documents/job_instance.md)
+
+- [Job Parameter](documents/job_parameter.md)
