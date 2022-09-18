@@ -29,7 +29,7 @@
 - readSkipCount: read 에 실패해서 스킵된 횟수 
 - processSkipCount: process 에 실패해서 스킵된 횟수 
 - writeSkipCount: write 에 실패해서 스킵된 횟수
-- filterCount: ItemProcessor 에서 필터링된 아이템 수 
+- filterCount: ItemProcessor 에서 필터링된 아이템 수 (처리한 수임.)
 - startTime: Job 을 실행할 때의 시스템 시간 
 - endTime: 성공 여부와 상관없이 실행이 종료되는 시간 
 - lastUpdated: JobExecution 이 마지막으로 저장될 떄의 시스템 시간
