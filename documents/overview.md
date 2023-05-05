@@ -122,6 +122,6 @@
   - 동시에 여러 배치가 작업이 처리되서 효율적
 - partitioning (processing of many instances of the same job at the same time)
   - 하나의 job 을 여러개의 인스턴스로 쪼개서 실행한다는 뜻. (하나의 job 에서 병렬처리)
-- a combination of the preceding options.
   - 대규모 배치 어플리케이션에서 경과 시간을 줄이기 위해
+- a combination of the preceding options.
 
